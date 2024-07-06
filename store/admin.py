@@ -24,3 +24,4 @@ admin.site.unregister(User)
 
 # Reregister the new way
 admin.site.register(User, UserAdmin)
+

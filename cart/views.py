@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .cart import Cart
 from store.models import Product
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 def cart_summary(request):
     #Get the cart   
@@ -13,29 +15,22 @@ def cart_summary(request):
     return render(request, "cart_summary.html", {"cart_products": cart_products, "quantities": quantities, "totals": totals})
 
 def cart_add(request):
-    #Get the cart
-    cart =  Cart(request)
-    #test for POST
-    if request.POST.get('action') == 'post':
-        # Get stuff
-        product_id = int(request.POST.get('product_id'))
-        product_qty = int(request.POST.get('product_qty'))
-        #look up product in DB
-        product = get_object_or_404(Product, id=product_id)
-
-        #Save to a session
-        cart.add(product=product, quantity=product_qty)
-
-        # Get Cart Quantity
-        cart_quantity = cart.__len__()
-
-
-        # Return response
-        # response = JsonResponse({'Product Name: ': product.name})
-        response = JsonResponse({'qty': cart_quantity})
-        messages.success(request, ("Product Added to Cart...."))
-        return response
-
+    if request.method == 'POST' and request.POST.get('action') == 'post':
+        if request.user.is_authenticated:
+            cart = Cart(request)
+            product_id = int(request.POST.get('product_id'))
+            product_qty = int(request.POST.get('product_qty'))
+            product = get_object_or_404(Product, id=product_id)
+            cart.add(product=product, quantity=product_qty)
+            cart_quantity = cart.__len__()
+            response = JsonResponse({'qty': cart_quantity})
+            messages.success(request, "Product added to cart.")
+            return response
+        else:
+            return HttpResponseForbidden("You must log in to add items to your cart.")
+    else:
+        return HttpResponseForbidden("Invalid request.")
+    
 def cart_delete(request):
     cart = Cart(request)
     if request.POST.get('action') == 'post':
