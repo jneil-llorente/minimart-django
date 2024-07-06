@@ -7,34 +7,55 @@
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">Register</h1>
-            <p class="lead fw-normal text-white-50 mb-0">Register for User Account....</p>
+            <p class="lead fw-normal text-white-50 mb-0">Register for a User Account</p>
         </div>
     </div>
 </header>
 
 <div class="container">
-    <div class ="row">
-            <div class="col-md-6 offset-md-3">
-                <br/><br/>
-                <form method="POST" action="{% url 'register' %}">
-                    {% csrf_token %}
-                    
-                    {{ form.as_p }}
-                    <br/><br/>
-                    <button type="submit" class="btn btn-secondary">
-                        Register
-                    </button>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-
-
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <br/><br/>
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'register' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-secondary">Register</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+            <br/><br/>
+        </div>
     </div>
 </div>
 
-{% endblock %}    
+{% endblock %}
+
+<!-- Custom CSS for registration page improvements -->
+<style>
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .form-control {
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+    .btn-secondary {
+        background-color: #808080; /* Grey */
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-size: 1rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover {
+        background-color: #666666; /* Darker grey */
+    }
+</style>

@@ -1,95 +1,114 @@
 {% extends 'base.html' %}
 
-
-
-{% load static %}
-
 {% block content %}
-        <!-- Header-->  
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Billing Info</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Enter Your Payment Info...</p>
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Billing Info</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Enter Your Payment Info...</p>
+        </div>
+    </div>
+</header>
+<br/>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <!-- Order Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    Order Summary
+                </div>
+                <div class="card-body">
+                    {% for product in cart_products %}
+                    {{ product.name }}:
+                    {% if product.is_sale %}
+                    ₱{{ product.sale_price }}
+                    {% else %}
+                    ₱{{ product.price }}
+                    {% endif %}
+                    <br/>
+                    Quantity:
+                    {% for key, value in quantities.items %}
+                    {% if key == product.id|slugify %}
+                    {{ value }}
+                    {% endif%}
+                    {% endfor %}
+                    <br/><br/>
+
+                    {% endfor %}
+                    <strong>Total: ₱{{ totals }}</strong>
+                    <br/><br/>
+                    <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items</a>
                 </div>
             </div>
-        </header>
-        <br/>
 
-        <div class="container">
-            <div class ="row">
-                <div class="col-md-6 offset-md-3">
-            
-                    <div class="card">
-                        <div class="card-header">
-                            Order Summary
-                        </div>
-                        <div class="card-body">
-                            {% for product in cart_products %}
-                                {{ product.name }}:
-                                    {% if product.is_sale %}
-                                        ₱{{ product.sale_price }}
-                                    {% else %}
-                                        ₱{{ product.price }}
-                                {% endif %}
-                                <br/>
-                                Quantity:
-                                {% for key, value in quantities.items%}
-                                    {% if key == product.id|slugify %}  
-                                        {{ value }}
-                                    {% endif%}
-                                {% endfor %}
-                                <br/><br/>
-
-                            {% endfor %}
-                            <strong> Total:   ₱{{ totals }}</strong>
-                            <br/><br/>
-                            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items
-                            </a>
-                            <br/>
-                        </div>
+            <!-- Shipping Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    Shipping Info
                 </div>
-                <br/><br/>
-                <div class="card">
-                    <div class="card-header">
-                      Shipping Info
-                    </div>
-                    <div class="card-body">
-
-                        Name: {{ shipping_info.shipping_full_name }}</br>
-                        Email: {{ shipping_info.shipping_email }}</br>
-                        Address1: {{ shipping_info.shipping_address1 }}</br>
-                        Region: {{ shipping_info.shipping_region }}</br>
-                        City: {{ shipping_info.shipping_city }}</br>
-                        Postal Code: {{ shipping_info.shipping_postalcode }}</br>
-                        <br/>
-                        <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Update Shipping</a>
-
-                    </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ shipping_info.shipping_full_name }}</p>
+                    <p><strong>Email:</strong> {{ shipping_info.shipping_email }}</p>
+                    <p><strong>Address1:</strong> {{ shipping_info.shipping_address1 }}</p>
+                    <p><strong>Region:</strong> {{ shipping_info.shipping_region }}</p>
+                    <p><strong>City:</strong> {{ shipping_info.shipping_city }}</p>
+                    <p><strong>Postal Code:</strong> {{ shipping_info.shipping_postalcode }}</p>
+                    <br/>
+                    <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Update Shipping</a>
                 </div>
-                <br/></br>
+            </div>
 
-                <div class="card">
-                    <div class="card-header">
-                      Billing Info
-                    </div>
-                    <div class="card-body">
-                      <form method="POST", action="{% url 'process_order' %}">
-                            {% csrf_token %}
+            <!-- Billing Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    Billing Info
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'process_order' %}">
+                        {% csrf_token %}
                         {{ billing_form.as_p }}
-                    </div>
+                        <br/>
+                        <button type="submit" class="btn btn-secondary">Pay Now</button>
+                    </form>
                 </div>
-                <br/>
-
-                <button type="submit" class="btn btn-secondary">
-                    Pay Now
-                </button>
-            </form>
             </div>
-        </div>
-        
-        </div>
 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+
+<!-- Custom CSS for checkout page improvements -->
+<style>
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #6c757d; /* Grey color */
+        color: #fff;
+        font-weight: bold;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .btn-secondary {
+        background-color: #6c757d; /* Grey color */
+        border-color: #6c757d;
+        border-radius: 0.5rem;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268; /* Darker shade of grey */
+        border-color: #5a6268;
+        color: #fff;
+    }
+</style>

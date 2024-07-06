@@ -1,61 +1,97 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <div class="container">
-    <div class ="row">
-        <center>
-            <div class="col-8">
-                <br/><br/>
-                <div class="card">
-                    <div class="card-header">
-                      Order {{ order.id }} - ₱{{order.amount_paid}}
-                    </div>
-                    <div class="card-body">
-                      Email: {{ order.email }}<br/>
-                      {% if order.date_shipped %}
-                        Date Shipped: {{ order.date_shipped }}<br/>
-                      {% else %}
-                        Date_Ordered: {{ order.date_ordered }}<br/>
-                      {% endif %}
-                      <br/>
-                      {{ order.full_name }}<br/>
-                      <pre>{{ order.shipping_address }}<br/></pre>
-                      Items: 
-                      <br/>
-                      {% for item in items %}
-                        {{ item.product }} - {{ item.quantity }} - ₱{{ item.price }}<br/>
-
-
-                      {% endfor %}
-                      <br/><br/>
-                      {% if not order.shipped %}
-                      <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="shipping_status" value="true">
-                        <button type="Submit" class="btn btn-success">Mark as Shipped</button>
-                      </form>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <br/><br/>
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    Order {{ order.id }} - ₱{{ order.amount_paid }}
+                </div>
+                <div class="card-body">
+                    <p>Email: {{ order.email }}</p>
+                    {% if order.date_shipped %}
+                        <p>Date Shipped: {{ order.date_shipped }}</p>
+                    {% else %}
+                        <p>Date Ordered: {{ order.date_ordered }}</p>
+                    {% endif %}
+                    <br/>
+                    <p>{{ order.full_name }}</p>
+                    <pre>{{ order.shipping_address }}</pre>
+                    <p>Items:</p>
+                    <ul>
+                        {% for item in items %}
+                            <li>{{ item.product }} - {{ item.quantity }} - ₱{{ item.price }}</li>
+                        {% endfor %}
+                    </ul>
+                    <br/><br/>
+                    <div class="text-center">
+                        {% if not order.shipped %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="true">
+                                <button type="submit" class="btn btn-success">Mark as Shipped</button>
+                            </form>
                         {% else %}
-                        <form method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="shipping_status" value="false">
-                            <button type="Submit" class="btn btn-danger">Mark as Not Shipped</button>
-                        </form>
-
-
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="false">
+                                <button type="submit" class="btn btn-danger">Mark as Not Shipped</button>
+                            </form>
                         {% endif %}
                     </div>
-                  </div>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
+                </div>
             </div>
-        </center>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        </div>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light grey background */
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important; /* Grey header for cards */
+        color: #ffffff;
+    }
+
+    .card {
+        background-color: #ffffff; /* White background for cards */
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #6c757d; /* Grey header for cards */
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .btn-success {
+        background-color: #28a745; /* Green button */
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        color: #ffffff;
+    }
+
+    .btn-danger {
+        background-color: #dc3545; /* Red button */
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        color: #ffffff;
+    }
+</style>
 
 {% endblock %}

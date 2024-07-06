@@ -7,41 +7,62 @@
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">Update Info</h1>
-            <p class="lead fw-normal text-white-50 mb-0">Update User Info....</p>
+            <p class="lead fw-normal text-white-50 mb-0">Update your personal and shipping information</p>
         </div>
     </div>
 </header>
 
 <div class="container">
-    <div class ="row">
-            <div class="col-md-6 offset-md-3">
-                <br/><br/>
-                <strong>Billing Information</strong>
-                <br/><br/>
-                <form method="POST" action="{% url 'update_info' %}">
-                    {% csrf_token %}
-                    
-                    {{ form.as_p }}
-                    <br/><br/>
-                    <strong>Shipping Information</strong>
-                    <br/><br/>
-                    {{ shipping_form.as_p }}
-                    <br/><br/>
-                    <button type="submit" class="btn btn-secondary">
-                        Update Profile
-                    </button>
-                </form>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-
-
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <br/><br/>
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'update_info' %}">
+                        {% csrf_token %}
+                        <h5 class="card-title">Billing Information</h5>
+                        {{ form.as_p }}
+                        <hr class="my-4">
+                        <h5 class="card-title">Shipping Information</h5>
+                        {{ shipping_form.as_p }}
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-secondary">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+            <br/><br/>
+        </div>
     </div>
 </div>
 
-{% endblock %}    
+{% endblock %}
+
+<!-- Custom CSS for update info page improvements -->
+<style>
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .form-control {
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+    .btn-secondary {
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-size: 1rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-secondary {
+        background-color: #808080; /* Grey */
+        color: #fff;
+        border: none;
+    }
+    .btn-secondary:hover {
+        background-color: #666666; /* Darker grey */
+    }
+</style>
